@@ -2,7 +2,7 @@
 To store all dockerfiles
 
 
-POSTGRES:
+<B> POSTGRES: postgresql-centos-Dockerfile </B>
 
 To connect to newly created postgresql container:
 
