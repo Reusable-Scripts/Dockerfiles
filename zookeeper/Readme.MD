@@ -1,4 +1,5 @@
 commands to build and run docker containers:
+
 <B>
 Base image: Centos7
 
@@ -8,7 +9,9 @@ Base image: Centos7
 
 #docker exec containerid ps -eaf|grep zookeeper
 </B>
+
 To Know IP address of docker containers:
+
 <B>
 #docker inspect containerid   (or)
 
