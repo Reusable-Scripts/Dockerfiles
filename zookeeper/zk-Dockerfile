@@ -2,3 +2,40 @@ FROM Centos:latest
 
 MAINTAINER Rakesh Dama
 
+ENV ZOOKEEPER_VERSION 3.4.6
+
+RUN mkdir -p /opt/zookeeper
+RUN wget -P /opt/zookeeper/ http://apache.org/dist/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/zookeeper-${ZOOKEEPER_VERSION}.tar.gz --no-check-certificate && \
+    cd /opt/zookeeper/ && \
+    tar -xvzf zookeeper-${ZOOKEEPER_VERSION}.tar.gz && \
+    rm -rf /opt/zookeeper/zookeeper-${ZOOKEEPER_VERSION}.tar.gz && \
+    mv /opt/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/conf/zoo_sample.cfg /opt/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/conf/zoo.cfg
+
+ENV ZK_HOME /opt/zookeeper/zookeeper-${ZOOKEEPER_VERSION}
+
+RUN sed  -i "s|/tmp/zookeeper|$ZK_HOME/data|g" $ZK_HOME/conf/zoo.cfg; mkdir -p $ZK_HOME/data
+
+RUN cd $ZK_HOME && \
+    touch start-zk.txt && \
+    echo "sed -i -r 's|#(log4j.appender.ROLLINGFILE.MaxBackupIndex.*)|\1|g' $ZK_HOME/conf/log4j.properties" >> $ZK_HOME/bin/start-zk.txt && \
+    echo "sed -i -r 's|#autopurge|autopurge|g' $ZK_HOME/conf/zoo.cfg" >> $ZK_HOME/bin/start-zk.txt && \
+    echo "$ZK_HOME/bin/zkServer.sh start-foreground" >> $ZK_HOME/bin/start-zk.txt && \
+    cp $ZK_HOME/bin/start-zk.txt /usr/bin/start-zk.sh
+
+EXPOSE 2181 2888 3888
+
+RUN groupadd -g 36348 gcypress && \
+    useradd -r -d /home/cypress -m -u 47586 -s /bin/bash -g gcypress cypress && \
+    chown -R cypress /usr/bin/start-zk.sh && \
+    chown -R cypress $ZK_HOME && \
+    chmod 755 /usr/bin/start-zk.sh
+
+ENV HOME /home/cypress
+
+WORKDIR /opt/zookeeper/zookeeper-${ZOOKEEPER_VERSION}
+
+VOLUME ["/opt/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/conf", "/opt/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/data"]
+
+USER cypress
+#CMD /usr/sbin/sshd && bash /usr/bin/start-zk.sh
+CMD bash /usr/bin/start-zk.sh
