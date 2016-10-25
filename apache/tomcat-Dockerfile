@@ -1,6 +1,25 @@
-FROM centos:java
+FROM centos:base
+
 
 MAINTAINER Rakesh Dama
+
+ENV JAVA_VERSION 8u5
+ENV BUILD_VERSION b13
+
+RUN yum -y install wget
+
+RUN wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/$JAVA_VERSION-$BUILD_VERSION/jdk-$JAVA_VERSION-linux-x64.tar.gz" && \
+    mv jdk-$JAVA_VERSION-linux-x64.tar.gz /opt/
+RUN  tar -zxf /opt/jdk-$JAVA_VERSION-linux-x64.tar.gz
+
+WORKDIR /opt/jdk1.8.0_05
+
+RUN alternatives --install /usr/bin/java jar /usr/java/latest/bin/java 200000 && \
+    alternatives --install /usr/bin/javaws javaws /usr/java/latest/bin/javaws 200000 && \
+    alternatives --install /usr/bin/javac javac /usr/java/latest/bin/javac 200000 && \
+    echo "JAVA_HOME=/opt/jdk1.8.0_05" >> /etc/environment
+    
+###############Tomcat Installation ####################    
 
 RUN wget http://mirrors.ocf.berkeley.edu/apache/tomcat/tomcat-8/v8.5.6/bin/apache-tomcat-8.5.6.tar.gz && \
     mv apache-tomcat-8.5.6.tar.gz /usr/share/
@@ -11,7 +30,9 @@ RUN tar -zxvf apache-tomcat-8.5.6.tar.gz && \
     mv apache-tomcat-8.5.6 /opt/tomcat && \
     groupadd tomcat && \
     useradd -s /bin/bash -g tomcat tomcat && \
-    chown -Rf tomcat.tomcat /opt/tomcat
+    chown -Rf tomcat.tomcat /opt/tomcat && \
+    yum remove wget -y && \
+    yum clean all
 
 ENV CATALINA_HOME /opt/tomcat/
 ADD jenkins.war $CATALINE_HOME/webapps/
