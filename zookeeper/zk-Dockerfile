@@ -1,4 +1,4 @@
-FROM Centos:latest
+FROM Centos:java
 
 MAINTAINER Rakesh Dama
 
