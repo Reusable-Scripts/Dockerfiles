@@ -8,10 +8,19 @@ RUN wget http://mirrors.ocf.berkeley.edu/apache/tomcat/tomcat-8/v8.5.6/bin/apach
 WORKDIR /usr/share/
 
 RUN tar -zxvf apache-tomcat-8.5.6.tar.gz && \
-    mv apache-tomcat-8.5.6 tomcat8 && \
+    mv apache-tomcat-8.5.6 /opt/tomcat && \
     groupadd tomcat && \
     useradd -s /bin/bash -g tomcat tomcat && \
-    chown -Rf tomcat.tomcat /usr/share/tomcat8 && \
-    wget -P /usr/share/tomcat8/webapps/ https://updates.jenkins-ci.org/download/war/2.22/jenkins.war --no-check-certificate
+    chown -Rf tomcat.tomcat /opt/tomcat
 
-EXPOSE 8080 8081 8082
+ENV CATALINA_HOME /opt/tomcat/
+ADD jenkins.war $CATALINE_HOME/webapps/
+
+ENV PATH $PATH:$CATALINA_HOME/bin
+
+
+EXPOSE 8080 8009
+
+user tomcat
+WORKDIR $CATALINA_HOME/bin/
+CMD ["bash", "startup.sh"]
