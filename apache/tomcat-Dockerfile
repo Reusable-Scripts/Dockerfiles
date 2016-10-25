@@ -1,0 +1,17 @@
+FROM centos:java
+
+MAINTAINER Rakesh Dama
+
+RUN wget http://mirrors.ocf.berkeley.edu/apache/tomcat/tomcat-8/v8.5.6/bin/apache-tomcat-8.5.6.tar.gz && \
+    mv apache-tomcat-8.5.6.tar.gz /usr/share/
+
+WORKDIR /usr/share/
+
+RUN tar -zxvf apache-tomcat-8.5.6.tar.gz && \
+    mv apache-tomcat-8.5.6 tomcat8 && \
+    groupadd tomcat && \
+    useradd -s /bin/bash -g tomcat tomcat && \
+    chown -Rf tomcat.tomcat /usr/share/tomcat8 && \
+    wget -P /usr/share/tomcat8/webapps/ https://updates.jenkins-ci.org/download/war/2.22/jenkins.war --no-check-certificate
+
+EXPOSE 8080 8081 8082
