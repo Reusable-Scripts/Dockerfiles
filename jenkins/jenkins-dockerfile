@@ -1,0 +1,33 @@
+FROM centos:java
+
+MAINTAINER Rakesh Dama
+
+RUN yum -y install wget
+
+RUN wget http://mirrors.ocf.berkeley.edu/apache/tomcat/tomcat-8/v8.5.6/bin/apache-tomcat-8.5.6.tar.gz && \
+    mv apache-tomcat-8.5.6.tar.gz /usr/share/ && \
+    yum remove wget -y
+
+WORKDIR /usr/share/
+
+RUN tar -zxvf apache-tomcat-8.5.6.tar.gz && \
+    mv apache-tomcat-8.5.6 /opt/tomcat && \
+    groupadd tomcat && \
+    useradd -s /bin/bash -g tomcat tomcat && \
+    chown -Rf tomcat.tomcat /opt/tomcat && \
+    rm -rf /opt/tomcat/webapps/*
+
+ENV CATALINA_HOME /opt/tomcat/
+ENV JAVA_HOME /opt/java
+ENV JRE_HOME $JAVA_HOME/jre
+
+ADD jenkins.war $CATALINA_HOME/webapps/
+
+ENV PATH $PATH:$CATALINA_HOME/bin
+
+
+EXPOSE 8080 8009
+
+user tomcat
+WORKDIR $CATALINA_HOME/bin/
+RUN ./startup.sh
