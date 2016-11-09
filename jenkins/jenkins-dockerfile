@@ -1,4 +1,4 @@
-FROM centos:java
+FROM cypress/centos:tjava
 
 MAINTAINER Rakesh Dama
 
@@ -18,7 +18,7 @@ RUN tar -zxvf apache-tomcat-8.5.6.tar.gz && \
     rm -rf /opt/tomcat/webapps/*
 
 ENV CATALINA_HOME /opt/tomcat/
-ENV JAVA_HOME /opt/java
+ENV JAVA_HOME /usr/java/latest
 ENV JRE_HOME $JAVA_HOME/jre
 
 ADD jenkins.war $CATALINA_HOME/webapps/
@@ -26,8 +26,9 @@ ADD jenkins.war $CATALINA_HOME/webapps/
 ENV PATH $PATH:$CATALINA_HOME/bin
 
 
-EXPOSE 8080 8009
-
 user tomcat
 WORKDIR $CATALINA_HOME/bin/
-RUN ./startup.sh
+ENTRYPOINT ["/bin/bash"]
+CMD ["catalina.sh", "run"]
+
+EXPOSE 8080 8009
