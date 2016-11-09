@@ -1,4 +1,4 @@
-FROM cypress/centos:tjava
+FROM cypress/centos:java
 
 MAINTAINER Rakesh Dama
 
