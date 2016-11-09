@@ -1,3 +1,8 @@
+#### CREATING A DATA CONTAINER TO USE AS JENKINS_HOME DIRECTORY and MOUNTING THIS DIRECTORY TO HOST MACHINE /data/jenkins DIRECTORY ####
+ sudo docker build -it jenkins:data .
+ sudo docker run -v /data/jenkins:/data/jenkins -d -it jenkins:data
+
+
 #### FOR BUILDING JAVA CONTAINER ####
 
 sudo docker build -t cypress/centos:java jenkins .
