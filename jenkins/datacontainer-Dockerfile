@@ -1,0 +1,5 @@
+FROM  cypress/centos:java
+
+MAINTAINER DAMA
+
+RUN mkdir -p /data/jenkins
