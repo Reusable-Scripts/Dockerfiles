@@ -3,6 +3,8 @@
  
  sudo docker run -v /data/jenkins:/data/jenkins -d -it jenkins:data
 
+sudo docker run --name JENKINS_HOME -v /data/jenkins:/data/jenkins/.jenkins -d -it jenkins:data
+
 
 #### FOR BUILDING JAVA CONTAINER ####
 
