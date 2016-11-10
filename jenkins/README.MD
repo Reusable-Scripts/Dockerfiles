@@ -28,3 +28,13 @@ sudo docker run -d --name master2-jenkins -p 9091:8080 -p 9010:8009 -i -t master
 
 sudo docker exec container-id ps -eaf|grep tomcat
 
+
+RUN cd $CATALINA_HOME/bin && \
+touch setenv.txt && \
+    echo "export CATALINA_OPTS="$CATALINA_OPTS -Xms512m"" >> $ZK_HOME/bin/setenv.txt && \
+    echo "export CATALINA_OPTS="$CATALINA_OPTS -Xmx1024m"" >> $ZK_HOME/bin/setenv.txt && \
+    echo export CATALINA_OPTS="$CATALINA_OPTS -Dhudson.DNSMultiCast.disabled=true" >> $ZK_HOME/bin/setenv.txt && \
+    echo "export CATALINA_OPTS="$CATALINA_OPTS -Djenkins.install.runSetupWizard=false"" >> $ZK_HOME/bin/setenv.txt
+WORKDIR $CATALINA_HOME/bin/
+RUN mv setenv.txt setenv.sh
+
