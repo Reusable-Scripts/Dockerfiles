@@ -24,7 +24,11 @@ sudo docker build -t master1:jenkins .
 
 sudo docker run -d --name master1-jenkins -p 9090:8080 -p 9009:8009 -i -t master1:jenkins
 
+sudo docker run -v /data/jenkins:/data/jenkins -d --name master1-jenkins -p 9090:8080 -p 9009:8009 -i -t master1:jenkins
+
 sudo docker run -d --name master2-jenkins -p 9091:8080 -p 9010:8009 -i -t master1:jenkins
+
+sudo docker run -v /data/jenkins:/data/jenkins -d --name master2-jenkins -p 9091:8080 -p 9010:8009 -i -t master1:jenkins
 
 sudo docker exec container-id ps -eaf|grep tomcat
 
