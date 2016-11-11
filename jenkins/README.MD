@@ -5,7 +5,7 @@
 
 sudo docker run --name JENKINS_HOME -v /data/jenkins:/data/jenkins/.jenkins -d -it jenkins:data
 
--v  -> to copy files from host to docker container
+-v  -> to mount volumes between host and docker container
 
 docker cp container-id:directory ./directory  --> to copy files from container to host
 
