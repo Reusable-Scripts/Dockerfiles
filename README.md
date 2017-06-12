@@ -1,4 +1,7 @@
 # Dockerfiles
+To list containers based on status: docker ps -a -f status=exited -f status=created
+To del containers based on status: docker rm $(docker ps -a -f status=exited -f status=created)
+
 To store all dockerfiles
 
 
